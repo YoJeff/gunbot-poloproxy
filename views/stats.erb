@@ -1,0 +1,33 @@
+<% hit,miss,pct = @proxy.cache.stats %>
+
+<div class="navbar-fixed">
+  <nav class=" blue lighten-3">
+    <div class="nav-wrapper">
+      <ul class="left hide-on-med-and-down" style="padding-left: 15px;">
+        <li>Started:  <%= RelativeTime.in_words(@proxy.start_time,Time.now) %></li>
+      </ul>
+
+      <a href="#" class="brand-logo center">Gunbot Proxy</a>
+      <ul class="right hide-on-med-and-down" style="padding-right: 15px;">
+        <li><%= '%.5f' % @proxy.data.cache_efficiency %>% Efficiency</li>
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="row">
+  <div class="col s10">
+    <%= partial('pairs') %>
+    <%= partial('balances') %>
+    <%= partial('orders') %>
+    <%= partial('history') %>
+  </div>
+  <div class="col s2">
+    <%= partial('market') %>
+    <%= partial('btc_balance') %>
+    <%= partial('recent') %>
+    <%= partial('proxy_stats') %>
+  </div>
+</div>
+
+

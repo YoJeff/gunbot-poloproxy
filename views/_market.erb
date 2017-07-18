@@ -1,0 +1,52 @@
+<% market = @proxy.data.ticker_stats %>
+<% if market %>
+  <div class="card  <%= market[:market_average] > 0 ? "green" : "red" %> white-text">
+    <div class="card-content center-align">
+      <p class="card-title">Market</p>
+      <h4 class="card-stats-number"><%= '%.2f' % market[:market_average] %>%</h4>
+      <p><%= market[:down] %> down, <%= market[:up] %> up</p>
+      <p>Weighted: <%= '%.2f' % market[:weighted_avg] %>%</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-content center-align" style="padding: 0px;">
+      <div class="row" style="margin-bottom: 0; line-height: 1.1">
+        <div class="green lighten-3 col s6 center-align card-title" style="margin-bottom: 0;"><p>Up</p></div>
+        <div class="pink lighten-3 col s6 center-align card-title" style="margin-bottom: 0;"><p>Down</p></div>
+      </div>
+
+      <% (0..4).each do |i|             
+            top = market[:top5][i]
+            bot = market[:bottom5][i]
+      %>
+        <div class="row" style="margin-bottom: 0; ">
+          <div class="col s3 left-align green lighten-3" style="padding-right: 0;">
+            <p>
+              <% if @proxy.data.pairs_tracked.include?(top['pair']) %>
+                <strong><%= top['pair'].split("_").last %></strong>          
+              <% else %>
+                <%= top['pair'].split("_").last %>
+              <% end %>
+            </p>
+          </div>
+          <div class="col s3 right-align green lighten-3" style="padding-left: 0;" >
+            <p><%= '%.2f' % (top['percentChange'] * 100) %>%</p>
+          </div>
+          <div class="col s3 left-align pink lighten-3 " style="padding-right: 0;">
+            <p>
+              <% if @proxy.data.pairs_tracked.include?(bot['pair']) %>
+                <strong><%= bot['pair'].split("_").last  %></strong>          
+              <% else %>
+                <%= bot['pair'].split("_").last %>
+              <% end %>
+            </p>
+          </div>
+          <div class="col s3 right-align pink lighten-3 "  style="padding-left: 0;">
+            <p><%= '%.2f' % (bot['percentChange'] * 100) %>%</p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

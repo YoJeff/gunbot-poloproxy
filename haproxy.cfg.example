@@ -1,0 +1,49 @@
+global
+   #log /dev/log local0
+   #log /dev/log local1 notice
+   maxconn 4096
+   user haproxy
+   group haproxy
+   pidfile     /run/haproxy.pid
+   daemon
+
+defaults
+   log  global
+   mode  http
+   option   httplog
+   option   dontlognull
+   retries  3
+   option redispatch
+   maxconn  2000
+   timeout connect 10000
+   timeout server 50000
+   timeout client 50000
+
+listen HAProxy-Statistics
+    bind :3306
+    mode http
+    option httplog
+    option httpclose
+    stats enable
+    stats uri /haproxy?stats
+    stats refresh 20s
+    stats show-node
+    stats show-legends
+    stats show-desc Gunbot PreProxy
+    stats auth admin:nimda
+
+frontend gunbot_listen
+    bind :443 ssl crt /etc/haproxy/server.pem
+    mode http
+    #option httplog
+    option socket-stats
+    maxconn  29
+    default_backend gunbot_proxy
+
+backend gunbot_proxy
+   mode http
+   #option httplog
+   balance roundrobin
+   hash-type consistent
+   server local_relay 127.0.0.1:5000
+

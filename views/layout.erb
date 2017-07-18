@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+      
+      <style type="text/css">
+        table.snug td, th { padding: 5px; }      
+        .sparktip  { margin: 50px; }
+        .jqstooltip{ box-sizing: content-box; }
+      </style>
+
+      <!-- <meta http-equiv="refresh" content="30" > -->
+      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sparklines/2.1.2/jquery.sparkline.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.5.4/jquery.timeago.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+      <title>Gunbot Proxy</title>
+
+    </head>
+
+    <body>
+      <%= yield %>
+
+      <script type="text/javascript">
+        $(function() {
+            /** This code runs when everything has been loaded on the page */
+            /* Inline sparklines take their values from the contents of the tag */
+            $('.inlinesparkline').sparkline('html', {type: 'line', enableTagOptions: true }); 
+
+
+            $('.inlinebar').sparkline('html', {type: 'bar',enableTagOptions: true } );
+          })
+
+      </script>
+      <script>
+        function calcEMA(data,period) {          
+          var k = 2/(period + 1);
+          var last = data[0]
+
+          var results = data.reduce((ema,value) => {
+            var point = ((value - last) * k) + last
+            ema.push(point)
+            last = point
+            return ema
+          },[])
+          return results;
+        }
+
+        function plusMinus(data) {
+          var last = data[0]
+          var results = data.reduce((r,value) => {
+            r.push(value-last)
+            last = value
+            return r
+          },[])
+          return results;
+        }
+      </script>
+    </body>
+  </html>

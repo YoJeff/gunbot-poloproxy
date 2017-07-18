@@ -1,0 +1,87 @@
+<div class="card ">
+  <div class="card-content center-align" style="padding: 5px;">
+    <p class="card-title">Proxy Status</p>
+    <div class="row" style="margin-bottom: 3px;">
+      <div class="col s6 left-align" style="padding-left: 0;">        
+        <p>Balances</p>
+      </div>
+      <div class="col s4">
+        <% if @proxy.data.balances_loaded? %>
+        <p><%= @proxy.data.all_balances.length %></p>
+        <% end %>
+      </div>
+      
+      <div class="col s2 right-align" style="padding-right: 0;">
+        <% if @proxy.data.balances_loaded? %>
+        <span class="new grey darken-2 badge" data-badge-caption=""><%= '%i' % @proxy.data.balances_age %>s</span>
+        <% else %>
+        <span class="new badge yellow" data-badge-caption="">??</span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 3px;">
+      <div class="col s6 left-align" style="padding-left: 0;">        
+        <p>Trade History</p>
+      </div>
+      <div class="col s4">
+        <% if @proxy.data.history_loaded? %>
+        <p><%= @proxy.data.all_history.length %></p>
+        <% end %>
+      </div>
+      
+      <div class="col s2 right-align" style="padding-right: 0;">
+        <% if @proxy.data.history_loaded? %>
+        <span class="new grey darken-2 badge" data-badge-caption=""><%= '%i' % @proxy.data.history_age %>s</span>
+        <% else %>
+        <span class="new badge yellow" data-badge-caption="">??</span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 3px;">
+      <div class="col s6 left-align" style="padding-left: 0;">        
+        <p>Open Orders</p>
+      </div>
+      <div class="col s4">
+        <% if @proxy.data.orders_loaded? %>
+        <p><%= @proxy.data.all_orders.length %></p>
+        <% end %>
+      </div>
+      
+      <div class="col s2 right-align" style="padding-right: 0;">
+        <% if @proxy.data.orders_loaded? %>
+        <span class="new grey darken-2 badge" data-badge-caption=""><%= '%i' % @proxy.data.orders_age %>s</span>
+        <% else %>
+        <span class="new badge yellow" data-badge-caption="">??</span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 3px;">
+      <div class="col s6 left-align" style="padding-left: 0;">        
+        <p>Charts Tracked</p>
+      </div>
+      <div class="col s4">
+        <p><%= @proxy.data.pair_periods_tracked.length %></p>
+      </div>
+      
+    </div>
+    <br/>
+    <p class="card-title">Buy Timeouts</p>
+    <% @proxy.data.buy_timeouts.each do |to| %>
+      <div class="row" style="margin-bottom: 3px;">
+        <div class="col s8 left-align" style="padding-left: 0;">        
+          <p><%= to.first %></p>
+        </div>
+        <div class="col s4 right-align">
+          <span class="new grey darken-2 badge" data-badge-caption=""><%= '%i' % to.last %>s</span>
+        </div>      
+      </div>
+    <% end %>
+
+
+
+
+  </div>
+</div>

@@ -1,0 +1,61 @@
+poloniex:
+  # proxy will rotate through keys as needed.  1 request per key at a time.  Requests will queue
+  # when there are no available keys
+  # recommend 3-4 for starters
+  creds:
+    - key:
+      secret:
+    - key:
+      secret:
+    - key:
+      secret:
+
+cache:
+  # these values should be less than your period length, ttl in seconds.  slightly less than half of your cycle time.
+  ttl:
+    returnTicker: 20
+    returnChartData: 20
+
+  # number of periods to cache.  Should be greater than your longest EMA.   Web stats show up to 50
+  periods: 50
+
+  # days of tradehistory to request on each poll.  Gunbot complains if this is too small
+  trade_history_days: 30
+
+  # this is the length of time before a cache entry is set to nil, and returns nils
+  # ensures that in the event of network disconnect, polo crash the cache will eventually
+  # stop returning data
+  global_expiry: 300
+
+  # in btc.  Used to estimate profit percent when the originating trade is older than
+  # the cached history
+  default_position: 0.01
+
+poller:
+  history: 15
+  balances: 15
+  orders: 15
+
+log:
+  # Acceptable log levels are: DEBUG, INFO, WARN, ERROR.  Will deafult to INFO if blank/error
+  level: INFO
+
+web:
+  price_ema: 16
+  volume_ema: 16
+
+buy:
+  # passthrough, normal, blocked.
+  mode: normal
+
+  # for normal mode, in seconds
+  timeout: 60
+
+buy_overrides:
+  # BTC_ETH: normal
+  # BTC_SYS: blocked
+  # BTC_ETC: normal
+  # BTC_XEM: normal
+  # BTC_NAUT: normal
+  # BTC_VTC: normal
+  # BTC_GNT: normal

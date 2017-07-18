@@ -1,0 +1,134 @@
+<div class="card">
+  <div class="card-content">
+    <% if @proxy.data.pairs_tracked && @proxy.data.pairs_tracked.length > 0 %>
+      <table class="snug striped bordered">
+      <thead>
+      <tr>
+        <th></th>
+        <th>Pair</th>
+        <th>State</th>
+        <th class="center-align">Period</th>
+        <th class="center-align" width="215">Closes</th>
+        <th class="center-align" width="265">Volume</th>
+        <th class="center-align">Last</th>
+        <th class="center-align"></th>
+        <th class="center-align" colspan="2">Position</th>
+      </tr>
+      </thead>
+      <% @proxy.data.pair_summary.sort_by {|x| [x[:has_balance] ? 0 : 1,x[:has_orders] ? 0 : 1,x[:pair]] }.each do |s| %>
+      <%  rowcolor = nil
+          rowcolor = 'yellow lighten-3' if s[:has_orders]
+          if s[:has_balance]
+            if s[:last_buy]
+              rowcolor = 'green lighten-4' if s[:pct_change] >= 0
+              rowcolor = 'pink lighten-4' if s[:pct_change] < 0
+            else
+              rowcolor = 'purple lighten-4'
+            end
+          end
+          rowID = s[:pair].split("_").last + s[:period]
+      %>
+      <tr class="<%= rowcolor %>">
+      <td class="right-align">
+        <% if s[:buy_mode] == :blocked %>
+          <i class="fa fa-pause fa-lg pink-text" style="padding-top: 7px;"></i>
+
+        <% elsif s[:buy_mode] == :passthrough %>
+          <i class="fa fa-refresh fa-lg orange-text" style="padding-top: 7px;"></i>
+        <% elsif s[:buy_mode] == :normal %>
+          <i class="fa fa-play fa-lg green-text" style="padding-top: 7px;"></i>
+        <% else %>
+          <%= s[:buy_mode] %>
+          <i class="fa fa-exclamation-triangle fa-lg red-text" style="padding-top: 7px;"></i>
+        <% end %>
+      </td>
+
+      <td>
+        <h5 class="<%= s[:has_orders] ? 'yellow' : '' %>"><%= s[:pair] %></h5>
+      </td>
+      <td class="center-align">
+        <% if s[:stale]  %>
+        <span class="new badge red" data-badge-caption=""><%= '%i' % s[:age] %>s</span>
+        <% else %>
+        <span class="new badge green" data-badge-caption=""><%= '%i' % s[:age] %>s</span>
+        <% end %>
+      </td>
+      <td class="center-align"><%= s[:period].to_i/60 %>m
+      </td>
+      <td id="<%= rowID %>c"></td>
+      <td id="<%= rowID %>v"> </td>
+      <td class="right-align">
+        <%= '%.8f' % s[:values].last['close'] %> <span class="grey-text" style="font-size: 12px">last</span><br/>
+        <span id="<%= rowID %>p">+</span>
+      </td>
+      <% if s[:has_balance] %>
+        <td class="right-align" style="line-height: 1.2">
+          <span class="grey-text" style="font-size: 12px;">
+            <% if s[:last_buy] %>
+              <%= RelativeTime.in_words(Time.parse(s[:last_buy]['date']+ ' UTC'),Time.now) %>
+            <% else %>
+              Unknown age
+            <% end %>
+          </span><br/>
+          <span class="grey-text" style="font-size: 12px;"><%= '%.4f' % s[:balance]['available'] %></span><br/>
+          <span class="grey-text" style="font-size: 12px;">
+            <% if s[:last_buy] %>
+              <%= '%.8f' % s[:last_buy]['rate'] if s[:last_buy]['rate'] %>
+            <% else %>
+              Unknown price
+            <% end %>
+          </span>
+        </td>
+
+        <td class="right-align" style="line-height: 1">
+
+          <span style="font-size: 24px; line-height: 1;"><%= '%.6f' % s[:balance]['btcValue'] %></span>
+        </td>
+
+        <td class="right-align" style="line-height: 1">
+          <span style="font-size: 24px; line-height: 1;">
+            <% if s[:last_buy] && s[:pct_change] %>
+              <%= '%.2f' % s[:pct_change] %>%
+            <% else %>
+              <% if @proxy.config.default_position > 0 %>
+                <%= '%.2f' % (((s[:balance]['btcValue']/@proxy.config.default_position)-1.0)*100) %>%
+              <% end %>
+            <% end %>
+          </span>
+        </td>
+
+      <% else %>
+        <td></td>
+        <td></td>
+        <td></td>
+      <% end %>
+    </tr>
+      <script>
+        $(function() {
+          var vz = <%= s[:values].to_json %>
+          min_vol = Math.min(...vz.map(x => x.volume ))
+          max_vol = Math.max(...vz.map(x => x.volume ))
+
+          min_close = Math.min(...vz.map(x => x.close ))
+          max_close = Math.max(...vz.map(x => x.close ))
+
+          volume_ema = calcEMA(vz.map(x => x.volume),<%= @proxy.config.web_volume_ema %>)
+          close_ema = calcEMA(vz.map(x => x.close),<%= @proxy.config.web_price_ema %>)
+
+          $("#<%= rowID %>v").sparkline(volume_ema.slice(-40), {type: 'line', height: 60, width: 230, chartRangeMin: min_vol, chartRangeMax: max_vol, fillColor: false, lineColor: 'green' });
+          $("#<%= rowID %>v").sparkline(vz.map(x => x.volume).slice(-45), {type: 'bar', composite: true, chartRangeMin: min_vol, chartRangeMax: max_vol, barColor: '#616161 '});
+
+          $("#<%= rowID %>c").sparkline(close_ema.slice(-50), {type: 'line', height: 60, width: 220, chartRangeMin: min_close, chartRangeMax: max_close, fillColor: false, lineColor: 'green' });
+          $("#<%= rowID %>c").sparkline(vz.map(x => x.close).slice(-50), {type: 'line', height: 60, width: 220, composite: true, chartRangeMin: min_close, chartRangeMax: max_close, fillColor: false, spotRadius:2.5, lineWidth: 2 });
+
+          var pm = plusMinus(vz.map(x => x.close))
+          $("#<%= rowID %>p").sparkline(pm.slice(-20), {type: 'bar', barColor: '#4CAF50', negBarColor: '#F44336', height:30});
+
+        })
+      </script>
+      <% end %>
+      </table>
+    <% end %>
+
+  </div>
+</div>

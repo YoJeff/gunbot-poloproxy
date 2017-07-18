@@ -1,0 +1,38 @@
+<div class="card">
+  <div class="card-content">
+    <% if !@proxy.data.history_loaded? %>
+      <p class="card-title">History Loading....</p>
+    <% elsif @proxy.data.all_history.length == 0 %>
+      <p class="card-title">No History</p>
+    <% else %>
+      <p class="card-title">Last 50 Trades<span class="new grey darken-2 badge" data-badge-caption=""><%= '%i' % @proxy.data.history_age %>s</span></p> 
+      <table class="snug">
+      <thead>
+      <tr>      
+        <th>Pair</th>
+        <th>Global#</th>
+        <th>Trade#</th>
+        <th>Date</th>
+        <th>Rate</th>
+        <th>Amount</th>
+        <th>Total</th>
+        <th>Type</th>        
+      </tr>
+      </thead>        
+      <% @proxy.data.all_history.sort_by {|x| x['date']}.last(50).reverse.each do |his| %>
+      
+      <tr>
+        <td><%= his['pair'] %></td>
+        <td><%= his['globalTradeID'] %></td>
+        <td><%= his['tradeID'] %></td>
+        <td><%= RelativeTime.in_words(Time.parse(his['date']+ ' UTC'),Time.now) %></td>
+        <td><%= his['rate'] %></td>
+        <td><%= his['amount'] %></td>
+        <td><%= his['total'] %></td>
+        <td><%= his['type'] %></td>        
+      </tr>
+      <% end %>
+      </table>
+    <% end %>
+  </div>
+</div>

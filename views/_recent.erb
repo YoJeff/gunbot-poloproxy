@@ -1,0 +1,30 @@
+<div class="card">
+  <div class="card-content" style="padding: 0;">
+    <% if !@proxy.data.history_loaded? %>
+      <p class="card-title">History Loading....</p>
+    <% elsif @proxy.data.all_history.length == 0 %>
+      <p class="card-title">No History</p>
+    <% else %>
+      <p class="card-title center-align">Last 5</p>
+      <table class="snug striped">
+      <thead>
+      <tr>      
+        <th>Type</th>        
+        <th>Pair</th>
+        <th>Date</th>
+      </tr>
+      </thead>        
+      <% @proxy.data.all_history.sort_by {|x| x['date']}.last(5).reverse.each do |his| %>     
+      <tr>
+        <td><%= his['type'] %></td>        
+        <td><%= his['pair'] %></td>
+        <td>
+          <%= RelativeTime.in_words(Time.parse(his['date']+ ' UTC'),Time.now) %>
+        </td>
+        
+      </tr>
+      <% end %>
+      </table>
+    <% end %>
+  </div>
+</div>

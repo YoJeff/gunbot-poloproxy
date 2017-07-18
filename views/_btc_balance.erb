@@ -1,0 +1,38 @@
+<div class="card ">
+  <div class="card-content center-align">
+    <p class="card-title">BTC Balance</p>
+
+    <div class="row" style="margin-bottom: 3px;">
+      <div class="col s8 left-align">        
+        <p>Available</p>
+      </div>
+      <div class="col s4">
+      	<%= '%.5f' % @proxy.data.btc_available %>
+      </div>
+ 	</div>
+    <div class="row" style="margin-bottom: 3px;">
+      <div class="col s8 left-align">        
+        <p>On Orders</p>
+      </div>
+      <div class="col s4">
+      	<%= '%.5f' % @proxy.data.btc_on_orders %>
+      </div>
+ 	</div>
+    <div class="row" style="margin-bottom: 3px;">
+      <div class="col s8 left-align">        
+        <p>Positions</p>
+      </div>
+      <div class="col s4">
+      	<%= '%.5f' % @proxy.data.btc_in_trades %>
+      </div>
+ 	</div>
+    <div class="row" style="margin-bottom: 3px; border-top: solid 2px #eee">
+      <div class="col s8 left-align">        
+      	<p><strong>Total</strong></p>
+      </div>
+      <div class="col s4">
+      	<strong><%= '%.5f' % @proxy.data.btc_total %></strong>
+      </div>
+ 	</div>
+  </div>
+</div>

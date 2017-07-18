@@ -1,0 +1,35 @@
+<div class="card">
+  <div class="card-content">
+    <% if !@proxy.data.orders_loaded? %>
+      <p class="card-title">Orders Loading....</p>
+    <% elsif @proxy.data.all_orders.length == 0 %>
+      <p class="card-title">No Orders</p>
+    <% else %>
+      <p class="card-title">Orders<span class="new grey darken-2 badge" data-badge-caption=""><%= '%i' % @proxy.data.orders_age %>s</span></p> 
+      <table class="snug">
+      <thead>
+      <tr>
+        <th>Pair</th>
+        <th>Date</th>
+        <th>Order#</th>
+        <th>Type</th>
+        <th>Rate</th>
+        <th>Amount</th>
+        <th>Total</th>
+      </tr>
+      </thead>        
+      <% @proxy.data.all_orders.each do |ord| %>
+      <tr>
+        <td><%= ord['pair'] %></td>
+        <td><%= ord['date'] %></td>
+        <td><%= ord['orderNumber'] %></td>
+        <td><%= ord['type'] %></td>
+        <td><%= '%.6f' % ord['rate'] %></td>
+        <td><%= '%.6f' % ord['amount'] %></td>
+        <td><%= '%.6f' % ord['total'] %></td>
+      </tr>
+      <% end %>
+      </table>
+    <% end %>
+  </div>
+</div>

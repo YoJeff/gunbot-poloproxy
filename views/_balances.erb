@@ -1,0 +1,29 @@
+<div class="card">
+  <div class="card-content">
+    <% if !@proxy.data.balances_loaded? %>
+      <p class="card-title">Balances Loading....</p>
+    <% elsif @proxy.data.all_balances.length == 0 %>
+      <p class="card-title">No Balances</p>
+    <% else %>
+      <p class="card-title">Balances<span class="new grey darken-2 badge" data-badge-caption=""><%= '%i' % @proxy.data.balances_age %>s</span></p> 
+      <table class="snug">
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Available</th>
+            <th>On Order</th>
+            <th>BTC Value</th>
+          </tr>
+        </thead>        
+        <% @proxy.data.all_balances.each do |bal| %>
+          <tr>
+            <td><%= bal['symbol'] %></td>
+            <td><%= '%.6f' % bal['available'] %></td>
+            <td><%= '%.6f' % bal['onOrders'] %></td>
+            <td><%= '%.6f' % bal['btcValue'] %></td>
+          </tr>
+        <% end %>
+      </table>
+    <% end %>
+  </div>
+</div>
