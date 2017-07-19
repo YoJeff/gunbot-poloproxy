@@ -125,7 +125,10 @@ class PoloConfig
     relay.start_poller
 
     buy_mode = (@config['buy']['mode']).to_sym
-    raise "Unknown buy mode #{@buy_mode}" unless [:blocked,:normal,:passthrough].include?(buy_mode)
+    unless [:blocked,:normal,:passthrough].include?(buy_mode)
+      logger.warn('config') { "Invalid buy mode specified -- #{buy_mode} -- all buys will be BLOCKED" }
+      @config['buy']['mode'] = :blocked
+    end
     logger.info('config') { "Buy mode set to #{buy_mode}"}
 
     config_log = @config.clone
