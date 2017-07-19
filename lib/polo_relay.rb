@@ -43,6 +43,11 @@ module PoloRelay
         logger.warn('BUY') { "BLOCK/orders - #{pretty_parms(params)}"}
         return {}
       end
+
+      if config.max_balance_count > 0 && data.balance_count >= config.max_balance_count
+        logger.warn('BUY') { "BLOCK/max_balance - #{pretty_parms(params)}"}
+        return {}        
+      end
       # let it rip skip
       results = cache.cache(params) do
         cache_hit = false

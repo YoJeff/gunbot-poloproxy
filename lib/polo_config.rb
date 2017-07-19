@@ -59,6 +59,10 @@ class PoloConfig
     end
   end
 
+  def self.max_balance_count
+    @config['buy']['max_balance_count'] || 0
+  end
+
   def self.default_period
     @config['cache']['default_period'] || 900
   end

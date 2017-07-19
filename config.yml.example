@@ -48,6 +48,11 @@ buy:
   # passthrough, normal, blocked.
   mode: normal
 
+  # the maximum number of balances before auto-blocking buys.   This is -balances- not open positions
+  # so if you hold balances in other coins -- those count.   0 = disabled
+  max_balance_count: 0
+
+
   # for normal mode, in seconds
   timeout: 60
 

@@ -5,19 +5,20 @@
       <div class="col s6 left-align" style="padding-left: 0;">        
         <p>Balances</p>
       </div>
-      <div class="col s4">
-        <% if @proxy.data.balances_loaded? %>
-        <p><%= @proxy.data.all_balances.length %></p>
-        <% end %>
-      </div>
+      <% if @proxy.data.balances_loaded? %>
+        <div class="col s4">
+          <p><%= @proxy.data.balance_count %></p>
+        </div>
       
-      <div class="col s2 right-align" style="padding-right: 0;">
-        <% if @proxy.data.balances_loaded? %>
-        <span class="new grey darken-2 badge" data-badge-caption=""><%= '%i' % @proxy.data.balances_age %>s</span>
-        <% else %>
-        <span class="new badge yellow" data-badge-caption="">??</span>
-        <% end %>
-      </div>
+        <div class="col s2 right-align" style="padding-right: 0;">
+          <span class="new grey darken-2 badge" data-badge-caption=""><%= '%i' % @proxy.data.balances_age %>s</span>
+        </div>
+      <% else %>
+        <div class="col s4">
+          <p>Loading...</p>
+        </div>
+      <% end %>      
+
     </div>
 
     <div class="row" style="margin-bottom: 3px;">

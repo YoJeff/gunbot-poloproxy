@@ -157,6 +157,10 @@ class PoloData
     end
   end
 
+  def self.balance_count
+    all_balances.length
+  end
+
   def self.has_balance?(symbol)
     return unless balances_loaded?
     balance(symbol).length > 0
