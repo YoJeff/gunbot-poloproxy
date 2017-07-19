@@ -115,6 +115,7 @@ class PoloConfig
 
     # setup creds
     @cred_mutex.synchronize do
+      @creds.clear
       @config['poloniex']['creds'].each do |x|
         @creds.push({ key: x['key'], secret: x['secret'], mutex: Mutex.new }) if x['key'] && x['secret']
       end
