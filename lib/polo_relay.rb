@@ -56,7 +56,7 @@ module PoloRelay
       logger.warn('BUY') { "RELAYED - #{pretty_parms(params)} - #{results}  ask=#{data.ticker_ask(pair)}"}
       return results
     else
-      logger.info('BUY') { "BLOCK/policy - #{pretty_parms(params)} ask=#{data.ticker_ask(pair)}"}
+      logger.warn('BUY') { "BLOCK/policy - #{pretty_parms(params)} ask=#{data.ticker_ask(pair)}"}
       return {}
     end
   end
@@ -66,13 +66,13 @@ module PoloRelay
     pair = params['currencyPair']
 
     if amount == 0
-      logger.info('SELL') { "BLOCK /zerosell - #{pretty_parms(params)} bid=#{data.ticker_bid(pair)}"}
+      logger.warn('SELL') { "BLOCK /zerosell - #{pretty_parms(params)} bid=#{data.ticker_bid(pair)}"}
       return {}
     end
     results = cache.cache(params) do
       relay_private(params)
     end
-    logger.info('SELL') { "RELAYED - #{pretty_parms(params)} - #{results} bid=#{data.ticker_bid(pair)}"}
+    logger.warn('SELL') { "RELAYED - #{pretty_parms(params)} - #{results} bid=#{data.ticker_bid(pair)}"}
     return results
   end
 
