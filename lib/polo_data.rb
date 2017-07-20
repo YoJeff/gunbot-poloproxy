@@ -70,6 +70,15 @@ class PoloData
     results
   end
 
+  def self.ticker_bid(pair)
+    data = cache.get('returnTicker')
+    result = data[pair]['highestBid'] rescue nil
+  end
+
+  def self.ticker_ask(pair)
+    data = cache.get('returnTicker')
+    result = data[pair]['lowestAsk'] rescue nil
+  end
 
 
   def self.pair_periods_tracked

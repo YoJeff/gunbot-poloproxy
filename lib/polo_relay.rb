@@ -20,58 +20,59 @@ module PoloRelay
 
 
     if buy_mode == :passthrough
-      logger.warn('BUY') { "PASSTHROUGH - #{pretty_parms(params)}"}
+      logger.warn('BUY') { "PASSTHROUGH - #{pretty_parms(params)}  ask=#{data.ticker_ask(pair)}"}
       return {}
     elsif buy_mode == :normal
       if !data.balances_loaded?
-        logger.warn('BUY') { "BLOCK/DATA balances not loaded - #{pretty_parms(params)}"}
+        logger.warn('BUY') { "BLOCK/DATA balances not loaded - #{pretty_parms(params)} ask=#{data.ticker_ask(pair)}"}
         return {}
       end
       if !data.orders_loaded?
-        logger.warn('BUY') { "BLOCK/DATA orders not loaded - #{pretty_parms(params)}"}
+        logger.warn('BUY') { "BLOCK/DATA orders not loaded - #{pretty_parms(params)} ask=#{data.ticker_ask(pair)}"}
         return {}
       end
       if cache.cache_valid?(params)
-        logger.warn('BUY') { "BLOCK/timeout - #{pretty_parms(params)}"}
+        logger.warn('BUY') { "BLOCK/timeout - #{pretty_parms(params)} ask=#{data.ticker_ask(pair)}"}
         return {}
       end
       if data.has_balance?(symbol)
-        logger.warn('BUY') { "BLOCK/balance - #{pretty_parms(params)}"}
+        logger.warn('BUY') { "BLOCK/balance - #{pretty_parms(params)} ask=#{data.ticker_ask(pair)}"}
         return {}
       end
       if data.has_orders?(pair)
-        logger.warn('BUY') { "BLOCK/orders - #{pretty_parms(params)}"}
+        logger.warn('BUY') { "BLOCK/orders - #{pretty_parms(params)} ask=#{data.ticker_ask(pair)}"}
         return {}
       end
 
       if config.max_balance_count > 0 && data.balance_count >= config.max_balance_count
-        logger.warn('BUY') { "BLOCK/max_balance - #{pretty_parms(params)}"}
-        return {}        
+        logger.warn('BUY') { "BLOCK/max_balance - #{pretty_parms(params)} ask=#{data.ticker_ask(pair)}"}
+        return {}
       end
       # let it rip skip
       results = cache.cache(params) do
         cache_hit = false
         relay_private(params)
       end
-      logger.warn('BUY') { "RELAYED - #{pretty_parms(params)} - #{results} "}
+      logger.warn('BUY') { "RELAYED - #{pretty_parms(params)} - #{results}  ask=#{data.ticker_ask(pair)}"}
       return results
     else
-      logger.info('BUY') { "BLOCK/policy - #{pretty_parms(params)}"}
+      logger.info('BUY') { "BLOCK/policy - #{pretty_parms(params)} ask=#{data.ticker_ask(pair)}"}
       return {}
     end
   end
 
   def self.sell(params)
     amount = Float(params['amount']) rescue 0
+    pair = params['currencyPair']
 
     if amount == 0
-      logger.info('SELL') { "BLOCK /zerosell - #{pretty_parms(params)}"}
+      logger.info('SELL') { "BLOCK /zerosell - #{pretty_parms(params)} bid=#{data.ticker_bid(pair)}"}
       return {}
     end
     results = cache.cache(params) do
       relay_private(params)
     end
-    logger.info('SELL') { "RELAYED - #{pretty_parms(params)} - #{results}"}
+    logger.info('SELL') { "RELAYED - #{pretty_parms(params)} - #{results} bid=#{data.ticker_bid(pair)}"}
     return results
   end
 
