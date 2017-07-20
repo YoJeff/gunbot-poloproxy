@@ -44,6 +44,11 @@ web:
   price_ema: 16
   volume_ema: 16
 
+  # interval for top progress bar.   Enter an interval (300, 900, 86400 etc) or any positive integer
+  # 0/null to disable
+  progress_bar: 86400
+  
+
 buy:
   # passthrough, normal, blocked.
   mode: normal

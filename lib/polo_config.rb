@@ -83,6 +83,10 @@ class PoloConfig
     @config['web']['volume_ema'] || 16
   end
 
+  def self.web_progress_bar_interval
+    @config['web']['progress_bar'] || 0
+  end
+
   def self.default_position
     @config['cache']['default_position'] || 0.0
   end
