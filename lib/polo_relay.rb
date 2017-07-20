@@ -35,7 +35,7 @@ module PoloRelay
         logger.warn('BUY') { "BLOCK/timeout - #{pretty_parms(params)} ask=#{data.ticker_ask(pair)}"}
         return {}
       end
-      if data.has_balance?(symbol)
+      if data.has_balance?(symbol) && config.buy_block_if_balance
         logger.warn('BUY') { "BLOCK/balance - #{pretty_parms(params)} ask=#{data.ticker_ask(pair)}"}
         return {}
       end

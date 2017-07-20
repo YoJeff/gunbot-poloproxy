@@ -47,7 +47,7 @@ web:
   # interval for top progress bar.   Enter an interval (300, 900, 86400 etc) or any positive integer
   # 0/null to disable
   progress_bar: 86400
-  
+
 
 buy:
   # passthrough, normal, blocked.
@@ -60,6 +60,10 @@ buy:
 
   # for normal mode, in seconds
   timeout: 60
+
+  # this will block buys if we have any target balance at all.
+  block_if_balance: true
+
 
 buy_overrides:
   # BTC_ETH: normal
