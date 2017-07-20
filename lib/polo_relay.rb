@@ -118,46 +118,30 @@ module PoloRelay
 
 
   def self.get_complete_balances(params,ttl)
-    cache_hit = true
-    c = cache.read(params['command'],true)
-    if c
-      logger.warn('relay') { "Balances are stale.   #{c.age} seconds." } if c.stale?
-      results = c.get
-    else
-      logger.warn('relay') { "Balances are empty, returning nil for now." }
-      results = nil
-    end
-    [results,cache_hit]
+    results, metrics = cache.get_with_metrics(params['command'])
+    logger.warn('relay') { "Balances are empty, returning nil for now." } unless results
+    logger.warn('relay') { "Balances are stale.   #{metrics['age']} seconds." } if results && metrics[:stale]
+    [results,true]
   end
 
   def self.get_trade_history(params,ttl)
-    cache_hit = true
     pair = params['currencyPair'] || "all"
-    c = cache.read(params['command'],true)
-    if c
-      logger.warn('relay') { "History is stale.   #{c.age} seconds." } if c.stale?
-      results = pair == 'all' ? c.get : c.get[pair] || [] rescue nil
-    else
-      logger.warn('relay') { "History is empty, returning nil for now." }
-      results = nil
-    end
+    results, metrics = cache.get_with_metrics(params['command'])
+    logger.warn('relay') { "History is empty, returning nil for now." } unless results
+    logger.warn('relay') { "History is stale.   #{metrics['age']} seconds." } if results && metrics[:stale]
 
-    [results,cache_hit]
+    results = results[pair] || [] rescue nil if results && pair != 'all'
+    [results,true]
   end
 
   def self.get_open_orders(params,ttl)
-    cache_hit = true
     pair = params['currencyPair'] || "all"
-    c = cache.read(params['command'],true)
-    if c
-      logger.warn('relay') { "Orders are stale.   #{c.age} seconds." } if c.stale?
-      results = pair == 'all' ? c.get : c.get[pair] || [] rescue nil
-    else
-      logger.warn('relay') { "Orders are empty, returning nil for now." }
-      results = nil
-    end
+    results, metrics = cache.get_with_metrics(params['command'])
+    logger.warn('relay') { "Orders are empty, returning nil for now." } unless results
+    logger.warn('relay') { "Orders are stale.   #{metrics['age']} seconds." } if results && metrics[:stale]
 
-    [results,cache_hit]
+    results = results[pair] || [] rescue nil if results && pair != 'all'
+    [results,true]
   end
 
 

@@ -91,8 +91,7 @@ class PoloData
 
   def self.pair_summary
     pair_periods_tracked.sort.inject([]) do |r,key|
-      c = cache.read(key)
-      data = c.get
+      data, metrics = cache.get_with_metrics(key)
       if data
         pair = key.split(':').first
         period = key.split(':').last
@@ -105,8 +104,8 @@ class PoloData
         r.push({
           pair: pair,
           period: period,
-          age: c.age,
-          stale: c.stale?,
+          age: metrics[:age],
+          stale: metrics[:stale],
           values: data,
           buy_mode: config.buy_mode(pair),
           has_orders: has_orders?(pair),
@@ -125,7 +124,7 @@ class PoloData
     cache.keys.inject([]) do |r,key|
       if key.include?('$')
         symbol = key.split('$').last
-        time_left = cache.read(key).time_left
+        time_left = cache.metrics(key)[:time_left]
         r << [symbol,time_left] if time_left > 0
       end
       r
@@ -140,7 +139,7 @@ class PoloData
 
   def self.balances_age
     return unless balances_loaded?
-    cache.read('returnCompleteBalances').age
+    cache.metrics('returnCompleteBalances')[:age]
   end
 
   def self.balance(symbol)
@@ -183,7 +182,7 @@ class PoloData
 
   def self.history_age
     return unless history_loaded?
-    cache.read('returnTradeHistory').age
+    cache.metrics('returnTradeHistory')[:age]
   end
 
 
@@ -228,7 +227,7 @@ class PoloData
 
   def self.orders_age
     return unless orders_loaded?
-    cache.read('returnOpenOrders').age
+    cache.metrics('returnOpenOrders')[:age]
   end
 
 

@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+  # frozen_string_literal: true
 require 'rufus-scheduler'
 require_relative 'polo_cache_item'
 
@@ -65,17 +65,44 @@ class PoloCache
     @mutexes[key] ||= Mutex.new
   end
 
-  def self.read(key,hit=false)
-    @hit += 1 if hit
-    @cache[key]
-  end
+  # def self.read(key,hit=false)
+  #   @hit += 1 if hit
+  #   @cache[key]
+  # end
 
   def self.loaded?(key)
     @cache[key] && @cache[key].loaded?
   end
 
   def self.get(key)
-    @cache[key] ? @cache[key].get : nil
+    result = nil
+    c = @cache[key]
+    if c
+      if c.super_stale?
+        delete(key)
+      else
+        @hit += 1
+        result = c.get
+      end
+    end
+    result
+  end
+
+  def self.get_with_metrics(key)
+    [get(key),metrics(key)]
+  end
+
+
+  def self.metrics(key)
+    c = @cache[key]
+    return {} unless c
+    {
+      ttl: c.ttl,
+      age: c.age,
+      time_left: c.time_left,
+      stale: c.stale?,
+    }
+
   end
 
   def self.delete(key)
