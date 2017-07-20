@@ -120,7 +120,7 @@ module PoloRelay
   def self.get_complete_balances(params,ttl)
     results, metrics = cache.get_with_metrics(params['command'])
     logger.warn('relay') { "Balances are empty, returning nil for now." } unless results
-    logger.warn('relay') { "Balances are stale.   #{metrics['age']} seconds." } if results && metrics[:stale]
+    logger.warn('relay') { "Balances are stale.   #{metrics[:age]} seconds." } if results && metrics[:stale]
     [results,true]
   end
 
@@ -128,7 +128,7 @@ module PoloRelay
     pair = params['currencyPair'] || "all"
     results, metrics = cache.get_with_metrics(params['command'])
     logger.warn('relay') { "History is empty, returning nil for now." } unless results
-    logger.warn('relay') { "History is stale.   #{metrics['age']} seconds." } if results && metrics[:stale]
+    logger.warn('relay') { "History is stale.   #{metrics[:age]} seconds." } if results && metrics[:stale]
 
     results = results[pair] || [] rescue nil if results && pair != 'all'
     [results,true]
@@ -138,7 +138,7 @@ module PoloRelay
     pair = params['currencyPair'] || "all"
     results, metrics = cache.get_with_metrics(params['command'])
     logger.warn('relay') { "Orders are empty, returning nil for now." } unless results
-    logger.warn('relay') { "Orders are stale.   #{metrics['age']} seconds." } if results && metrics[:stale]
+    logger.warn('relay') { "Orders are stale.   #{metrics[:age]} seconds." } if results && metrics[:stale]
 
     results = results[pair] || [] rescue nil if results && pair != 'all'
     [results,true]
