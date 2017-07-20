@@ -13,7 +13,7 @@
       if result
         result.to_json
       else
-        PoloLogger.logger.warn('app') { "NIL Result #{r.params} #{result.to_json}" }
+        # PoloLogger.logger.warn('app') { "NIL Result #{r.params} #{result.to_json}" }
         nil
       end
     end
@@ -24,7 +24,7 @@
       if result
         result.to_json
       else
-        PoloLogger.logger.warn('app') { "NIL Result #{r.params} #{result.to_json}" }
+        # PoloLogger.logger.warn('app') { "NIL Result #{r.params} #{result.to_json}" }
         nil
       end
     end
