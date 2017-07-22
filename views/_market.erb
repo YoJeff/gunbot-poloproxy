@@ -16,34 +16,16 @@
         <div class="pink lighten-3 col s6 center-align card-title" style="margin-bottom: 0;"><p>Down</p></div>
       </div>
 
-      <% (0..4).each do |i|             
+      <% (0..4).each do |i|
             top = market[:top5][i]
             bot = market[:bottom5][i]
       %>
-        <div class="row" style="margin-bottom: 0; ">
-          <div class="col s3 left-align green lighten-3" style="padding-right: 0;">
-            <p>
-              <% if @proxy.data.pairs_tracked.include?(top['pair']) %>
-                <strong><%= top['pair'].split("_").last %></strong>          
-              <% else %>
-                <%= top['pair'].split("_").last %>
-              <% end %>
-            </p>
+        <div class="row" style="margin-bottom: 0; font-size: 14px; ">
+          <div class="col s6 left-align green lighten-3" style="padding-right: 0.25rem;padding-left: 0.25rem;">
+            <div><%= top['pair'] %><div class="right"><%= '%.2f' % (top['percentChange'] * 100) %>%</div></div>
           </div>
-          <div class="col s3 right-align green lighten-3" style="padding-left: 0;" >
-            <p><%= '%.2f' % (top['percentChange'] * 100) %>%</p>
-          </div>
-          <div class="col s3 left-align pink lighten-3 " style="padding-right: 0;">
-            <p>
-              <% if @proxy.data.pairs_tracked.include?(bot['pair']) %>
-                <strong><%= bot['pair'].split("_").last  %></strong>          
-              <% else %>
-                <%= bot['pair'].split("_").last %>
-              <% end %>
-            </p>
-          </div>
-          <div class="col s3 right-align pink lighten-3 "  style="padding-left: 0;">
-            <p><%= '%.2f' % (bot['percentChange'] * 100) %>%</p>
+          <div class="col s6 left-align pink lighten-3 " style="padding-right: 0.25rem;padding-left: 0.25rem;">
+            <div><%= bot['pair'] %><div class="right"><%= '%.2f' % (bot['percentChange'] * 100) %>%</div></div>
           </div>
         </div>
       <% end %>
