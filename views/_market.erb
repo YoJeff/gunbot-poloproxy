@@ -1,4 +1,6 @@
 <% market = @proxy.data.ticker_stats %>
+<div class="center-align">
+ <span class="grey-text" style="font-size: 12px"><%= Time.now %></span></div>
 <% if market %>
   <div class="card  <%= market[:market_average] > 0 ? "green" : "red" %> white-text">
     <div class="card-content center-align">
