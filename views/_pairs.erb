@@ -115,14 +115,28 @@
           volume_ema = calcEMA(vz.map(x => x.volume),<%= @proxy.config.web_volume_ema %>)
           close_ema = calcEMA(vz.map(x => x.close),<%= @proxy.config.web_price_ema %>)
 
-          $("#<%= rowID %>v").sparkline(volume_ema.slice(-40), {type: 'line', height: 60, width: 230, chartRangeMin: min_vol, chartRangeMax: max_vol, fillColor: false, lineColor: 'green' });
-          $("#<%= rowID %>v").sparkline(vz.map(x => x.volume).slice(-45), {type: 'bar', composite: true, chartRangeMin: min_vol, chartRangeMax: max_vol, barColor: '#616161 '});
+          $("#<%= rowID %>v").sparkline(volume_ema.slice(-50), {type: 'line', height: 60, width: 250, chartRangeMin: min_vol, chartRangeMax: max_vol, fillColor: false, lineColor: 'green' });
+          $("#<%= rowID %>v").sparkline(vz.map(x => x.volume).slice(-50), {type: 'bar', composite: true, chartRangeMin: min_vol, chartRangeMax: max_vol, barColor: '#616161 '});
 
-          $("#<%= rowID %>c").sparkline(close_ema.slice(-50), {type: 'line', height: 60, width: 220, chartRangeMin: min_close, chartRangeMax: max_close, fillColor: false, lineColor: 'green' });
-          $("#<%= rowID %>c").sparkline(vz.map(x => x.close).slice(-50), {type: 'line', height: 60, width: 220, composite: true, chartRangeMin: min_close, chartRangeMax: max_close, fillColor: false, spotRadius:2.5, lineWidth: 2 });
+          $("#<%= rowID %>c").sparkline(close_ema.slice(-50), {type: 'line', height: 60, width: 250, chartRangeMin: min_close, chartRangeMax: max_close, fillColor: false, lineColor: 'green' });
+
+          if (<%= s[:has_balance] %>) {
+            last_buy = <%= s[:last_buy].to_json %>
+            if (last_buy) {
+              boughtLine = Array(50).fill(last_buy.rate)
+              $("#<%= rowID %>c").sparkline(boughtLine.slice(-50), {type: 'line', composite: true, chartRangeMin: min_close, chartRangeMax: max_close, fillColor: false, lineColor: 'grey', lineWidth: 1 });
+
+              console.log(boughtLine)
+            }
+            console.log('has balance',last_buy)
+          }
+
+
+          $("#<%= rowID %>c").sparkline(vz.map(x => x.close).slice(-50), {type: 'line', composite: true, chartRangeMin: min_close, chartRangeMax: max_close, fillColor: false, spotRadius:2.5, lineWidth: 2 });
 
           var pm = plusMinus(vz.map(x => x.close))
           $("#<%= rowID %>p").sparkline(pm.slice(-20), {type: 'bar', barColor: '#4CAF50', negBarColor: '#F44336', height:30});
+
 
         })
       </script>
