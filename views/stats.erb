@@ -19,7 +19,7 @@
 <div class="row">
   <div class="col s10">
     <% if @proxy.config.web_progress_bar_interval && @proxy.config.web_progress_bar_interval > 0 %>
-      <%  
+      <%
         period = @proxy.config.web_progress_bar_interval
         st = Time.now.to_i / period * period
         pct = ((Time.now.to_f - st) / period * 100).to_i
